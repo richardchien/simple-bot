@@ -10,12 +10,17 @@ bot = CQHttp(api_root='http://127.0.0.1:5700')
 @bot.on_message('private')
 def handle_msg(ctx):  # 处理函数
     pprint(ctx)
-    msg = ctx['message']
+    msg: str = ctx['message']
     if msg.startswith('echo '):
-        bot.send(ctx, msg[len('echo '):])
+        return {'reply': msg[len('echo '):]}
     elif msg == '喵一个':
-        bot.send(ctx, '喵～')
+        return {'reply': '喵～'}
     elif msg == '随机数':
         bot.send(ctx, str(random.randint(0, 100)))
+    elif msg.startswith('计算 '):
+        expression = msg[len('计算 '):].strip()
+        print(expression)
+        bot.send(ctx, message=str(eval(expression)))
 
-# bot.run('127.0.0.1', 8080)
+
+bot.run('127.0.0.1', 8080)
