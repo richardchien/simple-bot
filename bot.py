@@ -1,26 +1,41 @@
+"""
+这个模块用于接收 酷Q 消息，并调用对应命令的处理函数
+"""
+
 from pprint import pprint
-import random
 
 from cqhttp import CQHttp
+
+import tuling  # 导入图灵模块
+import plugins  # 导入所有命令，虽然后面没有直接用到，但不能删掉
+from command import command_handlers
 
 bot = CQHttp(api_root='http://127.0.0.1:5700')
 
 
-# 私聊消息
+# 注册私聊消息处理函数
 @bot.on_message('private')
-def handle_msg(ctx):  # 处理函数
+def handle_msg(ctx):
     pprint(ctx)
     msg: str = ctx['message']
-    if msg.startswith('echo '):
-        return {'reply': msg[len('echo '):]}
-    elif msg == '喵一个':
-        return {'reply': '喵～'}
-    elif msg == '随机数':
-        bot.send(ctx, str(random.randint(0, 100)))
-    elif msg.startswith('计算 '):
-        expression = msg[len('计算 '):].strip()
-        print(expression)
-        bot.send(ctx, message=str(eval(expression)))
+    sp = msg.split(maxsplit=1)
+    if not sp:
+        return
+
+    cmd, *remained = sp
+    arg = ''.join(remained)
+    print('cmd:', cmd)
+    print('arg:', arg)
+
+    handler = command_handlers.get(cmd)
+    print('handler:', handler)
+
+    if handler:
+        return handler(bot, ctx, arg)
+    else:
+        replies = tuling.get_reply(msg)
+        if replies:
+            return {'reply': replies[0]}
 
 
 bot.run('127.0.0.1', 8080)
