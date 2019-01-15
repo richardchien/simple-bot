@@ -11,24 +11,24 @@ from command import on_command
 
 @on_command('echo')
 def echo(bot, ctx, arg):
-    return {'reply': arg}
+    bot.send(ctx, arg)
 
 
 @on_command('喵一个')
 def miao(bot, ctx, arg):
-    return {'reply': '喵～'}
+    bot.send(ctx, '喵～')
 
 
 @on_command('随机数')
 def _(bot, ctx, arg):
-    return {'reply': str(random.randint(0, 100))}
+    bot.send(ctx, str(random.randint(0, 100)))
 
 
 @on_command('计算')
 def _(bot, ctx, arg):
     expression = arg.strip()
     print(expression)
-    return {'reply': str(eval(expression))}
+    bot.send(ctx, str(eval(expression)))
 
 
 @on_command('知乎日报')
