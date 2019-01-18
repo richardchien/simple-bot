@@ -1,6 +1,13 @@
+import random
+
 from nonebot import on_command, CommandSession, on_request, RequestSession
 from nonebot import permission as perm
 from nonebot import CQHttpError
+
+
+@on_command('dice', aliases=['掷骰子'])
+async def _(session: CommandSession):
+    await session.send(str(random.randint(1, 6)))
 
 
 @on_command('miao', aliases=['喵一个', '喵喵喵', '喵'])
